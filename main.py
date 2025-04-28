@@ -18,6 +18,10 @@ class Tweet(BaseModel):
     user: str
     content: str
 
+@app.get("/")
+def read_root():
+    return {"message": "Welcome to My Twitter Clone API!"}
+
 @app.get("/tweets")
 def get_tweets():
     return tweets
