@@ -1,32 +1,32 @@
-# main.py
 from fastapi import FastAPI
 from pydantic import BaseModel
-from typing import List
 
 app = FastAPI()
 
+# Fake tweets database
+tweets = []
+
+# Fake notifications database
+notifications = [
+    "User123 liked your tweet!",
+    "New follower: FlutterDev",
+    "Your post reached 100 likes!",
+    "Welcome to the app!"
+]
+
 class Tweet(BaseModel):
-    id: int
     user: str
     content: str
-    likes: int = 0
 
-# Fake Database
-tweets: List[Tweet] = []
-
-@app.get("/tweets", response_model=List[Tweet])
+@app.get("/tweets")
 def get_tweets():
     return tweets
 
-@app.post("/tweets", response_model=Tweet)
-def create_tweet(tweet: Tweet):
-    tweets.append(tweet)
-    return tweet
+@app.post("/tweets")
+def post_tweet(tweet: Tweet):
+    tweets.append(tweet.dict())
+    return {"message": "Tweet posted successfully"}
 
-@app.post("/tweets/{tweet_id}/like", response_model=Tweet)
-def like_tweet(tweet_id: int):
-    for tweet in tweets:
-        if tweet.id == tweet_id:
-            tweet.likes += 1
-            return tweet
-    return {"error": "Tweet not found"}
+@app.get("/notifications")
+def get_notifications():
+    return notifications
